@@ -1,4 +1,13 @@
+# Tableau-Like-Dashboard
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## My Words
+
+这是一个用来制作像tableau一样的仪表板的在线网站，希望它能包括以下功能
+
+- [ ] 复现一个tableau仪表盘的页面
+- [ ] sql界面，能够实现对数据库的sql操作，并且实时返回结果
 
 ## Getting Started
 
