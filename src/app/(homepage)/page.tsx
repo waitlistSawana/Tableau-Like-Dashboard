@@ -1,6 +1,11 @@
+import MainHome from "@/components/Home/MainHome";
 
 export default function Home() {
   return (
-    <main>home page</main>
+    <main>
+      
+      <MainHome />
+      
+    </main>
   );
 }
