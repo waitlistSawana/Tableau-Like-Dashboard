@@ -27,9 +27,6 @@ interface OrdersData{
   货主邮政编码 : number;
   货主国家 : string;
 }
-interface CardData{
-
-}
 
 const TablePage = async () => {
   const client = await db.connect();
@@ -49,12 +46,6 @@ const TablePage = async () => {
     limit 5
   `;
   const datasO = dataOrder.rows as OrdersData[];
-
-  //获取卡片需要的数据
-  const dataCard = await client.sql`
-  
-  `;
-  const datasC = dataCard.rows as CardData[]
 
   return (
     <div>

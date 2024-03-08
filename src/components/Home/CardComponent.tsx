@@ -2,8 +2,13 @@
 
 import { Card } from '@tremor/react';
 
-function classNames(...classes) { //tsx中会报错？
+function classNames(...classes:string[]) { //tsx中会报错？
   return classes.filter(Boolean).join(' ');
+}
+
+interface dataCType{
+  keyname: string;
+  values: number;
 }
 
 const data = [
@@ -33,17 +38,22 @@ const data = [
   },
 ];
 
-export default function CardComponent() {
+export default function CardComponent({datas}:{datas:dataCType[]}) {
+  // function handleclick(event: React.MouseEvent<HTMLButtonElement>){ //检查datas内容
+  //   console.log(datas)
+  // }
+
   return (
     <>
+      {/* <button onClick={handleclick}>检查datas内容</button> */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {data.map((item) => (
-          <Card key={item.name} className='shadow-lg'>
+        {datas.map((item) => (
+          <Card key={item.keyname} className='shadow-lg'>
             <p className="flex items-start justify-between">
               <span className="text-tremor-metric font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                {item.value}
+                {item.values}
               </span>
-              <span
+              {/* <span
                 className={classNames(
                   item.changeType === 'positive'
                     ? 'text-emerald-700 dark:text-emerald-500'
@@ -52,10 +62,10 @@ export default function CardComponent() {
                 )}
               >
                 {item.change}
-              </span>
+              </span> */}
             </p>
             <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-              {item.name}
+              {item.keyname}
             </p>
           </Card>
         ))}

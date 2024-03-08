@@ -21,6 +21,6 @@
       "@/*": ["./src/*"] //重要，@的具体出发位置从这里确定
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/Home/CardComponent.jsx", "tailwind.config.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/Home/CardComponent.tsx", "tailwind.config.ts"],
   "exclude": ["node_modules"]
 }
