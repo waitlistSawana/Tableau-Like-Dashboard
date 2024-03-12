@@ -5,7 +5,7 @@ export default function Home() {
     <main>
       
       <MainHome />
-      
+      <footer className="p-12"></footer>
     </main>
   );
 }
