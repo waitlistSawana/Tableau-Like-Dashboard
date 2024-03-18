@@ -1,13 +1,12 @@
 import React from 'react'
 import CardComponent from '@/components/Home/CardComponent'
-import AreaChartComponent from '@/components/Home/AreaChartComponent'
 import AreaChartComponent2 from '@/components/Home/AreaChartComponent2'
-import SparkChartComponent from '@/components/Home/SparkChartComponent'
 import BarListsComponent from '@/components/Home/BarListsComponent'
 import { db } from '@vercel/postgres'
 import DonutChartComponent  from '@/components/Home/DonutChartComponent'
 import { Card } from '@tremor/react'
-import { BarChartExampleWithCustomTooltip } from './BarChartComponent'
+import TextComponent from "@/components/Home/TextComponent";
+
 
 interface dataCType{
   keyname: string;
@@ -16,6 +15,10 @@ interface dataCType{
 interface dataBLType{
   name:string;
   values:number;
+}
+interface dataMSType{
+  month:string;
+  sales:number;
 }
 
 const MainHome = async () => {
@@ -51,28 +54,28 @@ const MainHome = async () => {
     -- 转置和合并
     select 
       case 
-        when sales is not null then '销售量'
+        when sales is not null then '总销售额'
       end as keyname,
       round(sales,2) as values
     from table_sales
     union all
     select 
       case 
-        when orders_cnt is not null then '订单数量'
+        when orders_cnt is not null then '总订单数量'
       end as keyname,
       orders_cnt as values
     from table_orders_cnt 
     union all
     select 
       case 
-        when customers_cnt is not null then '客户数量'
+        when customers_cnt is not null then '总客户数量'
       end as keyname,
       customers_cnt as values
     from table_customers_cnt 
     union all
     select 
       case 
-        when avg_price is not null then '平均单价'
+        when avg_price is not null then '平均客单价'
       end as keyname,
       round(avg_price,2) as values
     from table_avg_price 
@@ -90,36 +93,68 @@ const MainHome = async () => {
   from table_base 
   group by customer_id
   order by value desc
-  limit 12
+  limit 8
   `;
   const dataBL = dataBarList.rows as dataBLType[]
+
+  //获取月交易信息
+  const dataMonthSum =await client.sql`
+  with table_base as (
+    select 
+      o.订单id as order_id, o.订购日期 as buy_dt, od.单价 as price, od.数量 as amount, od.折扣 as discount
+    from nw_orders o
+    left join nw_orders_details od on o.订单id = od.订单id
+    ),
+  table_order_sum as (
+    select 
+      order_id, buy_dt, sum( price*amount*(1-discount) ) as sum
+    from table_base
+    group by order_id, buy_dt
+  ),
+  table_month_tag as (
+    select * ,DATE_TRUNC('month', buy_dt) as month
+    from table_order_sum
+  ),
+  table_month_sum as (
+    select month, cast(sum(sum) as decimal(20,2)) as sales
+    from table_month_tag 
+    group by month
+    order by month
+  )
+  select * from table_month_sum
+  `
+  const dataMS = dataMonthSum.rows as dataMSType[]
 
   return (
     <div className='container mx-auto'>
       <div className='w-full h-screen'>
+        <div className='mb-6 mt-3'>
+          <TextComponent />
+        </div>
         <div className='my-3'>
           <CardComponent datas={dataC}/>
         </div>
-        <div className='my-6 grid justify-between gap-6 grid-cols-4'>
+        <div className='my-6 grid justify-between gap-6 md:grid-cols-4 grid-cols-1'>
           <div className='col-span-3'>
-            <AreaChartComponent2 />
+            <AreaChartComponent2 datas={dataMS} />
             <div className='grid grid-cols-5 '>
               <div className='cols-span-1'>
-                <Card className='mt-6'>
+                {/* <Card className='mt-6'>
                   <DonutChartComponent  />
-                </Card>
+                </Card> */}
               </div>
               <div className='cols-span-2'>
               </div>
             </div>
           </div>
-          <div className='col-span-1'>
+          <div className='md:col-span-1 w-full'>
             <BarListsComponent datas={dataBL}/>
           </div>
         </div>
         <div>
         </div>
       </div>
+      <div className='w-full h-[108px]'></div>
     </div>
   )
 }

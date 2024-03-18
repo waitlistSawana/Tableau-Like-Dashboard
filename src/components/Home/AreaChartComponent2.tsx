@@ -2,72 +2,43 @@
 
 import { AreaChart, Card } from '@tremor/react';
 
-const chartdata = [
-  {
-    date: 'Jan 22',
-    SemiAnalysis: 2890,
-  },
-  {
-    date: 'Feb 22',
-    SemiAnalysis: 2750,
-  },
-  {
-    date: 'Mar 22',
-    SemiAnalysis: 3322,
-  },
-  {
-    date: 'Apr 22',
-    SemiAnalysis: 3470,
-  },
-  {
-    date: 'May 22',
-    SemiAnalysis: 3475,
-  },
-  {
-    date: 'Jun 22',
-    SemiAnalysis: 3129,
-  },
-  {
-    date: 'Jul 22',
-    SemiAnalysis: 3490,
-  },
-  {
-    date: 'Aug 22',
-    SemiAnalysis: 2903,
-  },
-  {
-    date: 'Sep 22',
-    SemiAnalysis: 2643,
-  },
-  {
-    date: 'Oct 22',
-    SemiAnalysis: 2837,
-  },
-  {
-    date: 'Nov 22',
-    SemiAnalysis: 2954,
-  },
-  {
-    date: 'Dec 22',
-    SemiAnalysis: 3239,
-  },
-];
-
 const valueFormatter = function (number:number): string {
-  return '$ ' + new Intl.NumberFormat('us').format(number).toString();
+  return '￥ ' + new Intl.NumberFormat('us').format(number).toString();
 };
 
-export default function AreaChartUsageExample() {
+interface dataMSType{
+  month:string;
+  sales:number;
+}
+
+export default function AreaChartComponent2({datas}:{datas:dataMSType[]}) {
+  const dataMS = datas.map(data => {
+    // 解析时间戳字符串
+    const date = new Date(data.month);
+    // 提取年份和月份
+    const year = date.getFullYear();
+    const monthName = date.toLocaleString('en-US', { month: 'short' }); // 获取月份的全名
+    // 转换sales字段为number类型
+    const sales =  Number(data.sales); // 如果sales是数字或数字字符串，则转换为数字；否则设置为0
+    // 构造新的数据对象
+    return {
+      month: `${year} ${monthName}`, // 替换month属性为转换后的字符串
+      sales: sales
+    };
+  });
+  // 计算最近12个月sales的和
+  const totalSales = datas.slice(-12,).reduce((sum, data) => sum + Number(data.sales), 0);
+
   return (
     <Card>
-      <h3 className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">Newsletter Revenue</h3>
-      <p className="text-tremor-metric text-tremor-content-strong dark:text-dark-tremor-content-strong font-semibold">$34,567</p>
+      <h3 className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">最近12月销售收入</h3>
+      <p className="text-tremor-metric text-tremor-content-strong dark:text-dark-tremor-content-strong font-semibold">￥ {totalSales}</p>
       <AreaChart
         className="mt-4 h-72"
-        data={chartdata}
-        index="date"
+        data={dataMS}
+        index="month"
         yAxisWidth={65}
-        categories={['SemiAnalysis']}
+        categories={['sales']}
         colors={['indigo', 'cyan']}
         valueFormatter={valueFormatter}
       />

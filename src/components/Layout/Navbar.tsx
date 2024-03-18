@@ -9,17 +9,18 @@ const Navbar = () => {
         </div>
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
-            <li><a href='https://github.com/waitlistSawana/Tableau-Like-Dashboard'>Github</a></li>
-            <li><a href='./#'>主页</a></li>
-            <li><a href='./table'>表格</a></li>
-            <li>
+            <li className='md:block hidden'><a href='https://github.com/waitlistSawana/Tableau-Like-Dashboard' target='_blank'>Github</a></li>
+            <li className='md:block hidden'><a href='./#'>主页</a></li>
+            <li className='md:block hidden'><a href='./table'>表格</a></li>
+            <li className='md:hidden block'>
               <details>
                 <summary>
                   菜单
                 </summary>
                 <ul className="p-2 bg-base-100 rounded-t-none z-10">
                   <li><a href='./table'>表格</a></li>
-                  <li><a>Link 2</a></li>
+                  <li><a href='https://github.com/waitlistSawana/Tableau-Like-Dashboard' target='_blank'>Github</a></li>
+                  <li><a href='./#'>主页</a></li>
                 </ul>
               </details>
             </li>

@@ -24,6 +24,7 @@ const BarListsComponent = (datas) => {
   return (
     <>
       <Card>
+        <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content mb-2">Top 8 客户</p>
         <BarList data={data} className="mx-auto max-w-sm" />
       </Card>
     </>
